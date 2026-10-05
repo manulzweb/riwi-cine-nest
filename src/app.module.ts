@@ -8,7 +8,7 @@ import { AppService } from './app.service';
 import configuration from './config/configuration';
 import { validate } from './config/env.validation';
 import { ALL_ENTITIES } from './database/entities';
-import { HealthModule } from './health/health.module';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
