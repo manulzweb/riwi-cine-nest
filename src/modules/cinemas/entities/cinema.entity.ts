@@ -21,10 +21,10 @@ export class Cinema {
   @Column({ name: 'city_id', type: 'int', nullable: true })
   cityId: number | null;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 200 })
   name: string;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'varchar', length: 300 })
   address: string;
 
   @Column({ name: 'isActive', type: 'boolean', default: true })

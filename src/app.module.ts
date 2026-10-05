@@ -2,9 +2,14 @@
 
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CommonModule } from './common/common.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { AuthGuard } from './common/guards/auth.guard';
+import { RolesGuard } from './common/guards/roles.guard';
 import configuration from './config/configuration';
 import { validate } from './config/env.validation';
 import { AuthModule } from './modules/auth/auth.module';
@@ -43,6 +48,7 @@ import { UsersModule } from './modules/users/users.module';
         autoLoadEntities: true,
       }),
     }),
+    CommonModule,
     HealthModule,
     AuthModule,
     UsersModule,
@@ -58,6 +64,20 @@ import { UsersModule } from './modules/users/users.module';
     OrdersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}

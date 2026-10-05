@@ -45,13 +45,13 @@ export class Movie {
   @Column({ name: 'releaseDate', type: 'date' })
   releaseDate: string;
 
-  @Column({ name: 'posterUrl', type: 'varchar', length: 255 })
+  @Column({ name: 'posterUrl', type: 'varchar', length: 500 })
   posterUrl: string;
 
-  @Column({ name: 'bannerUrl', type: 'varchar', length: 255, nullable: true })
+  @Column({ name: 'bannerUrl', type: 'varchar', length: 500, nullable: true })
   bannerUrl: string | null;
 
-  @Column({ name: 'trailerUrl', type: 'varchar', length: 255, nullable: true })
+  @Column({ name: 'trailerUrl', type: 'varchar', length: 500, nullable: true })
   trailerUrl: string | null;
 
   @Column({
