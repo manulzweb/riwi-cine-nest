@@ -34,7 +34,9 @@ export class PasswordResetToken {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.passwordResetTokens, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.passwordResetTokens, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
 }

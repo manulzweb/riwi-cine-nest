@@ -17,13 +17,15 @@ export default () => ({
   jwt: {
     accessSecret: process.env.JWT_ACCESS_SECRET || 'default_jwt_access_secret',
     accessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || '15m',
-    refreshSecret: process.env.JWT_REFRESH_SECRET || 'default_jwt_refresh_secret',
+    refreshSecret:
+      process.env.JWT_REFRESH_SECRET || 'default_jwt_refresh_secret',
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },
   cookies: {
     domain: process.env.COOKIE_DOMAIN || 'localhost',
     secure: process.env.COOKIE_SECURE === 'true',
-    sameSite: (process.env.COOKIE_SAME_SITE || 'lax') as 'lax' | 'strict' | 'none',
+    sameSite: (process.env.COOKIE_SAME_SITE || 'lax') as
+      'lax' | 'strict' | 'none',
   },
   csrf: {
     secret: process.env.CSRF_SECRET || 'default_csrf_secret',

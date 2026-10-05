@@ -27,7 +27,9 @@ async function bootstrap() {
   );
 
   await app.listen(port);
-  console.log(`Riwi Cine Backend (NestJS) running on port ${port} (API: /api/v1)`);
+  console.log(
+    `Riwi Cine Backend (NestJS) running on port ${port} (API: /api/v1)`,
+  );
 }
 
 bootstrap().catch((err) => {

@@ -120,11 +120,16 @@ export function validate(config: Record<string, unknown>) {
   });
 
   if (errors.length > 0) {
-    throw new Error(`Error de validación de variables de entorno: ${errors.toString()}`);
+    throw new Error(
+      `Error de validación de variables de entorno: ${errors.toString()}`,
+    );
   }
 
   // Validación de reglas de persistencia: se requiere DATABASE_URL o (DB_HOST y DB_NAME)
-  if (!validatedConfig.DATABASE_URL && (!validatedConfig.DB_HOST || !validatedConfig.DB_NAME)) {
+  if (
+    !validatedConfig.DATABASE_URL &&
+    (!validatedConfig.DB_HOST || !validatedConfig.DB_NAME)
+  ) {
     throw new Error(
       'Configuración de base de datos incompleta: Debe proveer DATABASE_URL o al menos DB_HOST y DB_NAME.',
     );

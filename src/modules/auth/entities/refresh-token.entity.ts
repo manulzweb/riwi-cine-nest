@@ -34,7 +34,10 @@ export class RefreshToken {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.refreshTokens, { nullable: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.refreshTokens, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
 }

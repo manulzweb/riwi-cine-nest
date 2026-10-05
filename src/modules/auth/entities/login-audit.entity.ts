@@ -25,7 +25,12 @@ export class LoginAudit {
   @Column({ name: 'ip_address', type: 'varchar', length: 255, nullable: true })
   ipAddress: string | null;
 
-  @Column({ name: 'device_user_agent', type: 'varchar', length: 255, nullable: true })
+  @Column({
+    name: 'device_user_agent',
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
   deviceUserAgent: string | null;
 
   @Column({ type: 'varchar', length: 255 })
@@ -37,7 +42,10 @@ export class LoginAudit {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.loginAudits, { nullable: true, onDelete: 'SET NULL' })
+  @ManyToOne(() => User, (user) => user.loginAudits, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
 }

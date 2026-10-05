@@ -72,7 +72,12 @@ export class Movie {
   @Column({ type: 'varchar', length: 50, nullable: true })
   language: string | null;
 
-  @Column({ name: 'isSubtitled', type: 'boolean', nullable: true, default: false })
+  @Column({
+    name: 'isSubtitled',
+    type: 'boolean',
+    nullable: true,
+    default: false,
+  })
   isSubtitled: boolean | null;
 
   @Column({ type: 'float8', nullable: true, default: 0 })

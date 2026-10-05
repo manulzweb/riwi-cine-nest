@@ -25,7 +25,9 @@ export class Department {
   @Column({ name: 'isActive', type: 'boolean', default: true })
   isActive: boolean;
 
-  @ManyToOne(() => Country, (country) => country.departments, { nullable: true })
+  @ManyToOne(() => Country, (country) => country.departments, {
+    nullable: true,
+  })
   @JoinColumn({ name: 'country_id' })
   country: Country;
 

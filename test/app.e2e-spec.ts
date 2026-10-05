@@ -32,8 +32,9 @@ describe('App & Health (e2e)', () => {
       .get('/health/live')
       .expect(200);
 
-    expect(res.body.status).toBe('ok');
-    expect(res.body.uptime).toBeDefined();
+    const body = res.body as Record<string, unknown>;
+    expect(body.status).toBe('ok');
+    expect(body.uptime).toBeDefined();
   });
 
   it('/health/ready (GET)', async () => {
@@ -41,7 +42,8 @@ describe('App & Health (e2e)', () => {
       .get('/health/ready')
       .expect(200);
 
-    expect(res.body.status).toBe('ok');
-    expect(res.body.database).toBe('connected');
+    const body = res.body as Record<string, unknown>;
+    expect(body.status).toBe('ok');
+    expect(body.database).toBe('connected');
   });
 });

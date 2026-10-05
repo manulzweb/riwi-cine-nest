@@ -1,11 +1,15 @@
 // src/health/health.service.ts
 
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { InjectEntityManager } from '@nestjs/typeorm';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class HealthService {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(
+    @InjectEntityManager()
+    private readonly entityManager: EntityManager,
+  ) {}
 
   checkLive() {
     return {
@@ -17,7 +21,7 @@ export class HealthService {
 
   async checkReady() {
     try {
-      await this.dataSource.query('SELECT 1');
+      await this.entityManager.query('SELECT 1');
       return {
         status: 'ok',
         database: 'connected',
