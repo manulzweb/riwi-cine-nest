@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # compiled output
 /dist
 dist/
@@ -5,6 +6,13 @@ dist/
 /node_modules
 **/node_modules/
 /build
+=======
+# Nestjs specific
+/dist
+/node_modules
+/build
+/tmp
+>>>>>>> origin/main
 
 # Logs
 logs
@@ -15,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+<<<<<<< HEAD
 # OS
 .DS_Store
 
@@ -46,10 +55,18 @@ coverage/
 .env.test.local
 .env.production.local
 .env.local
+=======
+# dotenv environment variable files
+.env
+.env.development
+.env.test
+.env.production
+>>>>>>> origin/main
 
 # temp directory
 .temp
 .tmp
+<<<<<<< HEAD
 
 # Runtime data
 pids
@@ -72,3 +89,5 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 ssh
 ssh.pub
 
+=======
+>>>>>>> origin/main
