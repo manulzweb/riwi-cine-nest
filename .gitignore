@@ -1,11 +1,18 @@
-# Nestjs specific
-/dist
-/node_modules
-/build
+# Dependencies
+node_modules/
+**/node_modules/
+package-lock.json
+
+# Compiled output
+dist/
+**/dist/
+build/
 /tmp
+.temp/
+.tmp/
 
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 pnpm-debug.log*
@@ -13,12 +20,50 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# dotenv environment variable files
-.env
-.env.development
-.env.test
-.env.production
+# OS
+.DS_Store
+Thumbs.db
 
-# temp directory
-.temp
-.tmp
+# Tests & Coverage
+coverage/
+**/coverage/
+.nyc_output/
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostics and scratch
+scratch/
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# SonarQube & SonarLint
+.scannerwork/
+.sonarlint/
+
+# SSH keys
+ssh
+ssh.pub
+*.key
+*.key.pub

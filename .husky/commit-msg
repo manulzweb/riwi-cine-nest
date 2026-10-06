@@ -1,0 +1,47 @@
+#!/bin/sh
+
+case "$1" in
+  /*) msg="$1" ;;
+  *) msg="$PWD/$1" ;;
+esac
+
+FIRST_LINE=$(head -n 1 "$msg")
+
+# Permitir commits automáticos generados por Git (merge, squash)
+if echo "$FIRST_LINE" | grep -qE '^Merge (branch|pull request|remote-tracking branch)'; then
+  exit 0
+fi
+
+# Validación estricta según convención DevOps:
+# Formato: [US-XXX] tipo: descripción
+REGEX='^\[US-[0-9]+\] (feat|fix|test|refactor|docs|chore): .+$'
+
+if ! echo "$FIRST_LINE" | grep -qE "$REGEX"; then
+  echo ""
+  echo "======================================================================"
+  echo " [ERROR] Mensaje de commit rechazado por la convención del proyecto."
+  echo "======================================================================"
+  echo " Mensaje recibido: \"$FIRST_LINE\""
+  echo ""
+  echo " Formato requerido: [US-XXX] tipo: descripción"
+  echo " Tipos permitidos:  feat, fix, test, refactor, docs, chore"
+  echo ""
+  echo " Ejemplos válidos:"
+  echo "   [US-101] feat: agregar autenticación de usuarios"
+  echo "   [US-102] fix: corregir validación de salas"
+  echo "   [US-103] test: agregar pruebas para showtimes service"
+  echo "   [US-104] refactor: optimizar entidades typeorm"
+  echo ""
+  echo " Ejemplos inválidos:"
+  echo "   arreglo login"
+  echo "   feat: agregar autenticación"
+  echo "======================================================================"
+  echo ""
+  exit 1
+fi
+
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+if [ -f "$ROOT_DIR/commitlint.config.cjs" ] && command -v npx >/dev/null 2>&1; then
+  cd "$ROOT_DIR/app" 2>/dev/null || cd "$ROOT_DIR"
+  npx --no -- commitlint --config "$ROOT_DIR/commitlint.config.cjs" --edit "$msg" 2>/dev/null || true
+fi
