@@ -365,7 +365,7 @@ pipeline {
 
                 echo '''
                 ==========================================
-                 8. BUILD (app/ - NESTJS & DOCKER IMAGE)
+                 8. BUILD (app/ - NESTJS)
                 ==========================================
                 '''
 
@@ -388,28 +388,13 @@ pipeline {
                         ls -lh dist/main.js
                     '''
                 }
-
-                sh '''
-                    set -e
-
-                    echo "Construyendo imagen Docker de la API desde app/Dockerfile..."
-                    docker build \
-                        -f app/Dockerfile \
-                        -t ${DOCKER_IMAGE}:${BUILD_NUMBER} \
-                        -t ${DOCKER_IMAGE}:latest \
-                        app
-
-                    echo ""
-                    echo "Imagen Docker construida exitosamente:"
-                    docker images ${DOCKER_IMAGE}
-                '''
             }
         }
 
 
         /*
          * ========================================================
-         * 10. DEPLOY
+         * 9. DEPLOY
          * ========================================================
          *
          * Despliegue de DB, migraciones, instancias de API y Nginx
@@ -429,7 +414,7 @@ pipeline {
 
                 echo '''
                 ==========================================
-                 10. DEPLOY (DOCKER COMPOSE)
+                 9. DEPLOY (DOCKER COMPOSE)
                 ==========================================
                 '''
 
@@ -471,7 +456,7 @@ pipeline {
 
         /*
          * ========================================================
-         * 11. HEALTH CHECK
+         * 10. HEALTH CHECK
          * ========================================================
          */
         stage('Health Check') {
@@ -489,7 +474,7 @@ pipeline {
 
                 echo '''
                 ==========================================
-                 11. HEALTH CHECK
+                 10. HEALTH CHECK
                 ==========================================
                 '''
 
