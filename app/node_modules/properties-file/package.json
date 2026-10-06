@@ -1,0 +1,190 @@
+{
+  "name": "properties-file",
+  "version": "5.0.7",
+  "description": ".properties file parser, editor, formatter and bundler integrations.",
+  "keywords": [
+    ".properties",
+    "properties",
+    ".properties file",
+    "properties file",
+    "parser",
+    "editor",
+    "formatter",
+    "Java",
+    "intl",
+    "i18n",
+    "Webpack loader",
+    "Rollup plugin",
+    "Vite plugin",
+    "esbuild plugin",
+    "Bun plugin",
+    "internationalization"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/properties-file/properties-file.git"
+  },
+  "license": "MIT",
+  "author": "properties-file",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./bundler/bun": {
+      "import": {
+        "types": "./dist/esm/bundler/bun.d.ts",
+        "default": "./dist/esm/bundler/bun.js"
+      },
+      "require": {
+        "types": "./dist/cjs/bundler/bun.d.ts",
+        "default": "./dist/cjs/bundler/bun.js"
+      }
+    },
+    "./bundler/esbuild": {
+      "import": {
+        "types": "./dist/esm/bundler/esbuild.d.ts",
+        "default": "./dist/esm/bundler/esbuild.js"
+      },
+      "require": {
+        "types": "./dist/cjs/bundler/esbuild.d.ts",
+        "default": "./dist/cjs/bundler/esbuild.js"
+      }
+    },
+    "./bundler/rollup": {
+      "import": {
+        "types": "./dist/esm/bundler/rollup.d.ts",
+        "default": "./dist/esm/bundler/rollup.js"
+      },
+      "require": {
+        "types": "./dist/cjs/bundler/rollup.d.ts",
+        "default": "./dist/cjs/bundler/rollup.js"
+      }
+    },
+    "./bundler/webpack": {
+      "import": {
+        "types": "./dist/esm/bundler/webpack.d.ts",
+        "default": "./dist/esm/bundler/webpack.js"
+      },
+      "require": {
+        "types": "./dist/cjs/bundler/webpack.d.ts",
+        "default": "./dist/cjs/bundler/webpack.js"
+      }
+    },
+    "./editor": {
+      "import": {
+        "types": "./dist/esm/editor/index.d.ts",
+        "default": "./dist/esm/editor/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/editor/index.d.ts",
+        "default": "./dist/cjs/editor/index.js"
+      }
+    },
+    "./escape": {
+      "import": {
+        "types": "./dist/esm/escape/index.d.ts",
+        "default": "./dist/esm/escape/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/escape/index.d.ts",
+        "default": "./dist/cjs/escape/index.js"
+      }
+    },
+    "./parser": {
+      "import": {
+        "types": "./dist/esm/parser/index.d.ts",
+        "default": "./dist/esm/parser/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/parser/index.d.ts",
+        "default": "./dist/cjs/parser/index.js"
+      }
+    },
+    "./unescape": {
+      "import": {
+        "types": "./dist/esm/unescape/index.d.ts",
+        "default": "./dist/esm/unescape/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/unescape/index.d.ts",
+        "default": "./dist/cjs/unescape/index.js"
+      }
+    }
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "benchmark": "npx tsx performance/benchmarks/compare.ts",
+    "build": "npm run check-nvm-node-version && npm run prettier-write && npm run eslint-fix && npm run typecheck && npm run build-artifacts && npm run test && npm run test-functional && npm run size",
+    "build-artifacts": "rm -Rf ./dist && npx tsx src/build-scripts/downlevel/transform.ts && tsc -p tsconfig.build.json && npx tsx src/build-scripts/build.ts",
+    "check-nvm-node-version": "check-node-version --node $(node -p \"'>='+require('fs').readFileSync('.nvmrc','utf-8').trim()\")",
+    "depcheck": "depcheck",
+    "eslint-fix": "eslint --fix",
+    "functional-generate": "npx tsx tests/functional/generate.ts",
+    "ncu": "npm-check-updates",
+    "ncu-update": "npm-check-updates -u",
+    "performance-clean": "rm -rf performance/published-packages/.cache performance/benchmarks/.results performance/size/.results",
+    "prepare": "husky",
+    "prettier-write": "prettier --write .",
+    "release": "dotenv -- release-it --only-version",
+    "size": "npx tsx performance/size/compare.ts",
+    "snapshot": "npx tsx performance/snapshots/manage.ts",
+    "test": "jest --coverage",
+    "test-functional": "node tests/functional/run-cjs.js && npx tsx tests/functional/run-esm.mts",
+    "test-node-compat": "docker build --platform linux/amd64 -f tests/node-compat/Dockerfile.node-0.4 .",
+    "typecheck": "find . -name tsconfig.json -not -path '*/node_modules/*' -not -path '*/dist/*' -not -path '*/.*/*' -print0 | xargs -0 -n1 -I{} npx tsc --noEmit -p {}"
+  },
+  "devDependencies": {
+    "@release-it/conventional-changelog": "12.0.0",
+    "@swc/core": "1.16.1",
+    "@types/bun": "1.4.0",
+    "@types/jest": "30.0.0",
+    "@types/node": "26.4.1",
+    "check-node-version": "4.2.1",
+    "depcheck": "1.4.7",
+    "dotenv-cli": "11.0.0",
+    "esbuild": "0.28.2",
+    "eslint": "10.9.1",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-import-resolver-typescript": "4.4.5",
+    "eslint-plugin-es-x": "10.0.0",
+    "eslint-plugin-import-x": "4.17.1",
+    "eslint-plugin-jest": "29.16.6",
+    "eslint-plugin-jsdoc": "64.3.5",
+    "eslint-plugin-package-json": "1.8.0",
+    "eslint-plugin-prefer-arrow-functions": "3.10.2",
+    "eslint-plugin-prettier": "5.5.6",
+    "eslint-plugin-tsdoc": "0.5.2",
+    "eslint-plugin-unicorn": "74.0.0",
+    "husky": "9.1.7",
+    "jest": "30.5.1",
+    "jiti": "2.7.0",
+    "jsonc-eslint-parser": "3.3.0",
+    "npm-check-updates": "23.1.0",
+    "prettier": "3.9.6",
+    "release-it": "21.0.2",
+    "rollup": "4.63.1",
+    "terser": "5.51.2",
+    "tinybench": "6.1.4",
+    "ts-jest": "29.4.12",
+    "ts-morph": "28.0.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.69.0"
+  },
+  "engines": {
+    "node": ">=0.4.0"
+  }
+}

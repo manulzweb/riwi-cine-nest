@@ -1,0 +1,67 @@
+services:
+
+  # ==========================================================
+  # JENKINS CI/CD SERVER
+  # ==========================================================
+  jenkins:
+    build:
+      context: ./jenkins
+      dockerfile: Dockerfile
+    image: ${JENKINS_IMAGE:-jenkins-cine-backend:latest}
+    container_name: jenkins
+    restart: unless-stopped
+    user: root
+    environment:
+      GIT_REPOSITORY: ${GIT_REPOSITORY:-https://github.com/manulzweb/cine-backend-nest.git}
+      GIT_BRANCH: ${GIT_BRANCH:-main}
+      SONARQUBE_URL: http://sonarqube:9000
+      APP_PORT: ${PORT:-3000}
+      APP_HEALTH_PATH: ${APP_HEALTH_PATH:-/health}
+    ports:
+      - "${JENKINS_HTTP_PORT:-8080}:8080"
+      - "${JENKINS_AGENT_PORT:-50000}:50000"
+    volumes:
+      - jenkins_home:${JENKINS_HOME:-/var/jenkins_home}
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - jenkins-network
+      - sonar-network
+
+  # ==========================================================
+  # SONARQUBE CODE QUALITY PLATFORM
+  # ==========================================================
+  sonarqube:
+    image: ${SONARQUBE_IMAGE:-sonarqube:community}
+    container_name: sonarqube
+    restart: unless-stopped
+    ports:
+      - "${SONARQUBE_PORT:-9000}:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    networks:
+      - sonar-network
+      - jenkins-network
+
+# ==========================================================
+# NETWORKS
+# ==========================================================
+networks:
+  jenkins-network:
+    name: jenkins-network
+    driver: bridge
+  sonar-network:
+    name: sonar-network
+    driver: bridge
+
+# ==========================================================
+# VOLUMES
+# ==========================================================
+volumes:
+  jenkins_home:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
