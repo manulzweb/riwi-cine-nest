@@ -407,6 +407,10 @@ pipeline {
                     branch 'main'
                     branch 'master'
                     branch 'develop'
+                    expression {
+                        def branch = env.BRANCH_NAME ?: env.GIT_BRANCH ?: ''
+                        return branch.contains('main') || branch.contains('master') || branch.contains('develop') || branch == ''
+                    }
                 }
             }
 
@@ -444,7 +448,7 @@ pipeline {
                     REPLICAS="${API_REPLICAS:-2}"
                     echo ""
                     echo "Levantando backend dinámicamente (${REPLICAS} instancias) y Nginx load balancer..."
-                    ${COMPOSE_CMD} up -d --scale api=${REPLICAS} api nginx
+                    ${COMPOSE_CMD} up -d --build --scale api=${REPLICAS} api nginx
 
                     echo ""
                     echo "Servicios activos tras el despliegue:"
@@ -467,6 +471,10 @@ pipeline {
                     branch 'main'
                     branch 'master'
                     branch 'develop'
+                    expression {
+                        def branch = env.BRANCH_NAME ?: env.GIT_BRANCH ?: ''
+                        return branch.contains('main') || branch.contains('master') || branch.contains('develop') || branch == ''
+                    }
                 }
             }
 
@@ -481,16 +489,23 @@ pipeline {
                 sh '''
                     set -e
 
-                    TARGET_URL="http://127.0.0.1:${HTTP_PORT}${APP_HEALTH_PATH}"
-                    echo "Comprobando disponibilidad a través del proxy reverso Nginx en: ${TARGET_URL}"
-
                     MAX_RETRIES=15
                     WAIT_SECONDS=4
                     HEALTH_OK=false
 
+                    # Determinar URL objetivo (red interna Docker o localhost)
+                    TARGET_URL="http://cine-nginx:80${APP_HEALTH_PATH}"
+                    if curl --fail --silent --show-error --max-time 2 "http://127.0.0.1:${HTTP_PORT}${APP_HEALTH_PATH}" > /dev/null 2>&1; then
+                        TARGET_URL="http://127.0.0.1:${HTTP_PORT}${APP_HEALTH_PATH}"
+                    fi
+
+                    echo "Comprobando disponibilidad a través del proxy reverso Nginx en: ${TARGET_URL}"
+
                     for i in $(seq 1 ${MAX_RETRIES}); do
                         echo "Intento ${i}/${MAX_RETRIES}: Consultando ${TARGET_URL}..."
-                        if curl --fail --silent --show-error --max-time 5 "${TARGET_URL}" > /dev/null 2>&1; then
+                        if curl --fail --silent --show-error --max-time 5 "${TARGET_URL}" > /dev/null 2>&1 || \
+                           curl --fail --silent --show-error --max-time 5 "http://127.0.0.1:${HTTP_PORT}${APP_HEALTH_PATH}" > /dev/null 2>&1 || \
+                           curl --fail --silent --show-error --max-time 5 "http://cine-nginx:80${APP_HEALTH_PATH}" > /dev/null 2>&1; then
                             echo ""
                             echo "Servicio respondió exitosamente a través de Nginx (HTTP 200 OK)."
                             HEALTH_OK=true
