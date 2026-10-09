@@ -5,7 +5,10 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import csurf from 'csurf';
+import type { NextFunction, Request, Response } from 'express';
 import { AppModule } from './app.module.js';
+import { CSRF_COOKIE_NAME } from './common/constants/cookie.constant.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +18,43 @@ async function bootstrap() {
 
   // Enable cookies
   app.use(cookieParser());
+
+  // Enable CSRF protection with csurf
+  const isProduction = process.env.NODE_ENV === 'production';
+  const csrfProtection = csurf({
+    cookie: {
+      key: CSRF_COOKIE_NAME,
+      sameSite: 'lax',
+      secure: isProduction,
+      httpOnly: false,
+    },
+    value: (req: Request): string => {
+      const headerVal =
+        req.headers['x-csrf-token'] ||
+        req.headers['csrf-token'] ||
+        req.headers['xsrf-token'];
+      if (typeof headerVal === 'string') return headerVal;
+      if (Array.isArray(headerVal) && headerVal[0]) return headerVal[0];
+      const body = req.body as Record<string, unknown> | undefined;
+      if (body && typeof body._csrf === 'string') return body._csrf;
+      return '';
+    },
+  });
+
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    // Métodos seguros (GET, HEAD, OPTIONS) ejecutan csurf para adjuntar req.csrfToken()
+    if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+      return csrfProtection(req, res, next);
+    }
+
+    // Endpoints exentos de verificación obligatoria de token CSRF (health checks y registro)
+    const exemptPaths = ['/health', '/api/v1/health', '/api/v1/auth/register'];
+    if (exemptPaths.some((p) => req.path.startsWith(p))) {
+      return next();
+    }
+
+    return csrfProtection(req, res, next);
+  });
 
   // Enable CORS with credentials for cookies & CSRF headers
   app.enableCors({

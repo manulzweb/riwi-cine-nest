@@ -19,7 +19,6 @@ import {
   ACCESS_TOKEN_COOKIE,
   REFRESH_TOKEN_COOKIE,
 } from '../../common/constants/cookie.constant.js';
-import { CsrfService } from '../../common/csrf/csrf.service.js';
 import { Public } from '../../common/decorators/public.decorator.js';
 import { AuthService } from './auth.service.js';
 import { ForgotPasswordDto } from './dto/forgot-password.dto.js';
@@ -33,14 +32,13 @@ import { VerifyEmailDto } from './dto/verify-email.dto.js';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly csrfService: CsrfService,
     private readonly configService: ConfigService,
   ) {}
 
   @Public()
   @Get('csrf')
-  getCsrfToken(@Res({ passthrough: true }) res: Response) {
-    const token = this.csrfService.setCsrfCookie(res);
+  getCsrfToken(@Req() req: Request) {
+    const token = typeof req.csrfToken === 'function' ? req.csrfToken() : '';
     return { csrfToken: token };
   }
 
@@ -59,7 +57,6 @@ export class AuthController {
       result.tokens.accessToken,
       result.tokens.refreshToken,
     );
-    this.csrfService.setCsrfCookie(res);
     return result;
   }
 
@@ -78,7 +75,6 @@ export class AuthController {
       result.tokens.accessToken,
       result.tokens.refreshToken,
     );
-    this.csrfService.setCsrfCookie(res);
     return result;
   }
 

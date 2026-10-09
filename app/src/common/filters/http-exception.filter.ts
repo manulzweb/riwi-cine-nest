@@ -45,14 +45,20 @@ export class HttpExceptionFilter implements ExceptionFilter {
             : undefined);
       }
     } else if (exception instanceof Error) {
-      this.logger.error(
-        `Unhandled error: ${exception.message}`,
-        exception.stack,
-      );
-      message =
-        process.env.NODE_ENV === 'production'
-          ? 'Internal server error'
-          : exception.message;
+      if ('code' in exception && (exception as { code: unknown }).code === 'EBADCSRFTOKEN') {
+        status = HttpStatus.FORBIDDEN;
+        code = 'AUTH_CSRF_INVALID';
+        message = 'Token CSRF inválido o ausente';
+      } else {
+        this.logger.error(
+          `Unhandled error: ${exception.message}`,
+          exception.stack,
+        );
+        message =
+          process.env.NODE_ENV === 'production'
+            ? 'Internal server error'
+            : exception.message;
+      }
     }
 
     response.status(status).json({
