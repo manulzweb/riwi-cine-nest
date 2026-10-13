@@ -1,10 +1,15 @@
 // src/database/data-source.ts
 
 import * as dotenv from 'dotenv';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import 'reflect-metadata';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
@@ -15,8 +20,8 @@ export const dataSourceOptions: DataSourceOptions = {
   database: process.env.DB_NAME || 'postgres',
   synchronize: false,
   logging: process.env.DB_LOGGING === 'true',
-  entities: [__dirname + '/../modules/**/entities/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/migrations/*{.ts,.js}'],
+  entities: [path.join(__dirname, '../modules/**/entities/*.entity{.ts,.js}')],
+  migrations: [path.join(__dirname, 'migrations/*{.ts,.js}')],
   subscribers: [],
 };
 

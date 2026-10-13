@@ -43,7 +43,7 @@ import { UsersModule } from './modules/users/users.module.js';
         username: configService.get<string>('database.username', 'postgres'),
         password: configService.get<string>('database.password', ''),
         database: configService.get<string>('database.database', 'postgres'),
-        synchronize: false,
+        synchronize: process.env.DB_SYNCHRONIZE === 'false' ? false : true,
         logging: configService.get<boolean>('database.logging', false),
         autoLoadEntities: true,
       }),

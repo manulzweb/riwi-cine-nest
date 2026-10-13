@@ -25,30 +25,6 @@ services:
       - backend
 
   # ==========================================================
-  # MIGRACIONES DE BASE DE DATOS (TYPEORM)
-  # ==========================================================
-  migrate:
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-    image: cine-backend-nest:latest
-    container_name: cine-backend-migrate
-    command: npx typeorm migration:run -d dist/database/data-source.js
-    environment:
-      - NODE_ENV=production
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USERNAME=nodejs
-      - DB_PASSWORD=123456
-      - DB_NAME=postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: "no"
-    networks:
-      - backend
-
-  # ==========================================================
   # API BACKEND NESTJS (ESCALABLE DINÁMICAMENTE)
   # ==========================================================
   api:
@@ -65,13 +41,14 @@ services:
       - DB_USERNAME=nodejs
       - DB_PASSWORD=123456
       - DB_NAME=postgres
+      - DB_SYNCHRONIZE=true
       - JWT_ACCESS_SECRET=riwi_super_access_secret_2026
       - JWT_REFRESH_SECRET=riwi_super_refresh_secret_2026
       - COOKIE_DOMAIN=riwi.manulz.dev
       - COOKIE_SECURE=false
     depends_on:
-      migrate:
-        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
     expose:
       - "3000"
     deploy:
