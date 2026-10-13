@@ -10,7 +10,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "${DB_PORT}:5432"
+      - "${DB_PORT:-5432}:5432"
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -74,7 +74,7 @@ services:
     expose:
       - "3000"
     deploy:
-      replicas: ${API_REPLICAS}
+      replicas: ${API_REPLICAS:-1}
     networks:
       - backend
       - jenkins-network
@@ -92,7 +92,7 @@ services:
     depends_on:
       - api
     ports:
-      - "${HTTP_PORT}:80"
+      - "${HTTP_PORT:-80}:80"
     networks:
       - backend
       - jenkins-network
