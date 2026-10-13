@@ -10,13 +10,13 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     environment:
-      - POSTGRES_USER=nodejs
-      - POSTGRES_PASSWORD=123456
-      - POSTGRES_DB=postgres
+      - POSTGRES_USER=${DB_USERNAME:-nodejs}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-123456}
+      - POSTGRES_DB=${DB_NAME:-postgres}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U nodejs -d postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-nodejs} -d ${DB_NAME:-postgres}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -31,28 +31,28 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-    image: cine-backend-nest:latest
+    image: ${APP_IMAGE:-cine-backend-nest:latest}
     restart: unless-stopped
     environment:
       - NODE_ENV=production
       - PORT=3000
       - DB_HOST=postgres
       - DB_PORT=5432
-      - DB_USERNAME=nodejs
-      - DB_PASSWORD=123456
-      - DB_NAME=postgres
-      - DB_SYNCHRONIZE=true
-      - JWT_ACCESS_SECRET=riwi_super_access_secret_2026
-      - JWT_REFRESH_SECRET=riwi_super_refresh_secret_2026
-      - COOKIE_DOMAIN=riwi.manulz.dev
-      - COOKIE_SECURE=false
+      - DB_USERNAME=${DB_USERNAME:-nodejs}
+      - DB_PASSWORD=${DB_PASSWORD:-123456}
+      - DB_NAME=${DB_NAME:-postgres}
+      - DB_SYNCHRONIZE=${DB_SYNCHRONIZE:-true}
+      - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET:-riwi_super_access_secret_2026}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-riwi_super_refresh_secret_2026}
+      - COOKIE_DOMAIN=${COOKIE_DOMAIN:-riwi.manulz.dev}
+      - COOKIE_SECURE=${COOKIE_SECURE:-false}
     depends_on:
       postgres:
         condition: service_healthy
     expose:
       - "3000"
     deploy:
-      replicas: 1
+      replicas: ${API_REPLICAS:-1}
     networks:
       - backend
       - jenkins-network
@@ -64,13 +64,13 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
-    image: cine-nginx:latest
+    image: ${NGINX_IMAGE:-cine-nginx:latest}
     container_name: cine-nginx
     restart: unless-stopped
     depends_on:
       - api
     ports:
-      - "80:80"
+      - "${HTTP_PORT:-80}:80"
     networks:
       - backend
       - jenkins-network
