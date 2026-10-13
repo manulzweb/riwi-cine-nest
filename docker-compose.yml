@@ -33,7 +33,7 @@ services:
       dockerfile: Dockerfile
     image: cine-backend-nest:latest
     container_name: cine-backend-migrate
-    command: npm run migration:run
+    command: npx typeorm migration:run -d dist/database/data-source.js
     environment:
       - NODE_ENV=production
       - DB_HOST=postgres
