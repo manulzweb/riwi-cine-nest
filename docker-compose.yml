@@ -10,16 +10,17 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "5432:5432"
     environment:
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      - POSTGRES_USER=nodejs
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=postgres
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]
+      test: ["CMD-SHELL", "pg_isready -U nodejs -d postgres"]
       interval: 5s
       timeout: 5s
       retries: 10
+      start_period: 15s
     networks:
       - backend
 
@@ -30,16 +31,16 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-    image: ${APP_IMAGE}
+    image: cine-backend-nest:latest
     container_name: cine-backend-migrate
     command: npm run migration:run
     environment:
       - NODE_ENV=production
       - DB_HOST=postgres
       - DB_PORT=5432
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=nodejs
+      - DB_PASSWORD=123456
+      - DB_NAME=postgres
     depends_on:
       postgres:
         condition: service_healthy
@@ -54,19 +55,19 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-    image: ${APP_IMAGE}
+    image: cine-backend-nest:latest
     restart: unless-stopped
     environment:
       - NODE_ENV=production
       - PORT=3000
       - DB_HOST=postgres
       - DB_PORT=5432
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}
-      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
-      - COOKIE_DOMAIN=${COOKIE_DOMAIN}
+      - DB_USERNAME=nodejs
+      - DB_PASSWORD=123456
+      - DB_NAME=postgres
+      - JWT_ACCESS_SECRET=riwi_super_access_secret_2026
+      - JWT_REFRESH_SECRET=riwi_super_refresh_secret_2026
+      - COOKIE_DOMAIN=riwi.manulz.dev
       - COOKIE_SECURE=false
     depends_on:
       migrate:
@@ -74,7 +75,7 @@ services:
     expose:
       - "3000"
     deploy:
-      replicas: ${API_REPLICAS:-1}
+      replicas: 1
     networks:
       - backend
       - jenkins-network
@@ -86,13 +87,13 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
-    image: ${NGINX_IMAGE}
+    image: cine-nginx:latest
     container_name: cine-nginx
     restart: unless-stopped
     depends_on:
       - api
     ports:
-      - "${HTTP_PORT:-80}:80"
+      - "80:80"
     networks:
       - backend
       - jenkins-network
