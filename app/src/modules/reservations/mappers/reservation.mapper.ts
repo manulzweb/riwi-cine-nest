@@ -20,10 +20,14 @@ export class ReservationMapper {
         : undefined,
       row: entity.seat?.row,
       number: entity.seat?.number,
+      seatType: entity.seat?.seatType?.name,
     };
   }
 
   static toResponseDto(entity: Reservation): ReservationResponseDto {
+    const seats = entity.seats?.map((s) => this.toSeatResponseDto(s)) || [];
+    const totalAmount = seats.reduce((acc, s) => acc + (s.price || 0), 0);
+
     return {
       id: entity.id,
       userId: entity.userId,
@@ -32,8 +36,14 @@ export class ReservationMapper {
       expiresAt: entity.expiresAt,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
-      seats: entity.seats?.map((s) => this.toSeatResponseDto(s)),
+      seats,
+      totalAmount,
       movieTitle: entity.function?.movie?.title,
+      moviePoster: entity.function?.movie?.posterUrl,
+      cinemaName: entity.function?.roomRelation?.cinema?.name,
+      roomName: entity.function?.roomRelation?.name,
+      startTime: entity.function?.startTime,
+      format: entity.function?.format,
     };
   }
 
