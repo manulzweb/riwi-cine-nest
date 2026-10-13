@@ -1,6 +1,6 @@
 // src/locations/entities/country.entity.ts
 
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn , type Relation } from 'typeorm';
 import { Department } from './department.entity.js';
 
 @Entity({ name: 'countries' })
@@ -15,5 +15,5 @@ export class Country {
   isActive: boolean;
 
   @OneToMany(() => Department, (department) => department.country)
-  departments: Department[];
+  departments: Relation<Department[]>;
 }

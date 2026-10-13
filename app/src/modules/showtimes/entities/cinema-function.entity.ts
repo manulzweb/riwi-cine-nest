@@ -8,6 +8,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { Movie } from '../../movies/entities/movie.entity.js';
 import { Room } from '../../cinemas/entities/room.entity.js';
@@ -58,9 +59,9 @@ export class CinemaFunction {
 
   @ManyToOne(() => Movie, (movie) => movie.functions, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'movieId' })
-  movie: Movie;
+  movie: Relation<Movie>;
 
   @ManyToOne(() => Room, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'roomId' })
-  roomRelation: Room;
+  roomRelation: Relation<Room>;
 }

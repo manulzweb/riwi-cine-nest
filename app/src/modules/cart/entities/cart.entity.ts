@@ -9,6 +9,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity.js';
 import { CartItem } from './cart-item.entity.js';
@@ -56,11 +57,11 @@ export class Cart {
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Relation<User>;
 
   @OneToMany(() => CartItem, (item) => item.cart)
-  items: CartItem[];
+  items: Relation<CartItem[]>;
 
   @OneToMany(() => CartTicket, (ticket) => ticket.cart)
-  tickets: CartTicket[];
+  tickets: Relation<CartTicket[]>;
 }

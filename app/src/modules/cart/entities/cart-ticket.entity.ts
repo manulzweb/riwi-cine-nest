@@ -8,6 +8,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { Cart } from './cart.entity.js';
 import { CinemaFunction } from '../../showtimes/entities/cinema-function.entity.js';
@@ -53,13 +54,13 @@ export class CartTicket {
 
   @ManyToOne(() => Cart, (cart) => cart.tickets, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'cart_id' })
-  cart: Cart;
+  cart: Relation<Cart>;
 
   @ManyToOne(() => CinemaFunction)
   @JoinColumn({ name: 'function_id' })
-  function: CinemaFunction;
+  function: Relation<CinemaFunction>;
 
   @ManyToOne(() => Reservation)
   @JoinColumn({ name: 'reservation_id' })
-  reservation: Reservation;
+  reservation: Relation<Reservation>;
 }

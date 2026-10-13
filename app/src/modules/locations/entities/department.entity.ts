@@ -7,6 +7,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  type Relation,
 } from 'typeorm';
 import { Country } from './country.entity.js';
 import { City } from './city.entity.js';
@@ -29,8 +30,8 @@ export class Department {
     nullable: true,
   })
   @JoinColumn({ name: 'country_id' })
-  country: Country;
+  country: Relation<Country>;
 
   @OneToMany(() => City, (city) => city.department)
-  cities: City[];
+  cities: Relation<City[]>;
 }

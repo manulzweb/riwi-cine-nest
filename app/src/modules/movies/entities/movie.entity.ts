@@ -7,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { CinemaFunction } from '../../showtimes/entities/cinema-function.entity.js';
 
@@ -93,5 +94,5 @@ export class Movie {
   updatedAt: Date;
 
   @OneToMany(() => CinemaFunction, (cinemaFunction) => cinemaFunction.movie)
-  functions: CinemaFunction[];
+  functions: Relation<CinemaFunction[]>;
 }

@@ -8,6 +8,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { Reservation } from './reservation.entity.js';
 import { Seat } from '../../cinemas/entities/seat.entity.js';
@@ -50,9 +51,9 @@ export class ReservationSeat {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'reservation_id' })
-  reservation: Reservation;
+  reservation: Relation<Reservation>;
 
   @ManyToOne(() => Seat)
   @JoinColumn({ name: 'seat_id' })
-  seat: Seat;
+  seat: Relation<Seat>;
 }

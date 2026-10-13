@@ -8,6 +8,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { Snack } from './snack.entity.js';
 
@@ -55,5 +56,5 @@ export class Promotion {
 
   @ManyToOne(() => Snack, (snack) => snack.promotions, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'snack_id' })
-  snack: Snack;
+  snack: Relation<Snack>;
 }

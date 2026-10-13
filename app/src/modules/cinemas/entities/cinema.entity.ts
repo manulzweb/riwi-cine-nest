@@ -9,6 +9,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { City } from '../../locations/entities/city.entity.js';
 import { Room } from './room.entity.js';
@@ -38,8 +39,8 @@ export class Cinema {
 
   @ManyToOne(() => City, (city) => city.cinemas, { nullable: true })
   @JoinColumn({ name: 'city_id' })
-  city: City;
+  city: Relation<City>;
 
   @OneToMany(() => Room, (room) => room.cinema)
-  rooms: Room[];
+  rooms: Relation<Room[]>;
 }

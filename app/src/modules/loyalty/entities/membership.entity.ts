@@ -9,6 +9,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity.js';
 import { MembershipLevel } from './membership-level.entity.js';
@@ -42,13 +43,13 @@ export class Membership {
 
   @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Relation<User>;
 
   @ManyToOne(() => MembershipLevel)
   @JoinColumn({ name: 'level_id' })
-  level: MembershipLevel;
+  level: Relation<MembershipLevel>;
 
   @ManyToOne(() => MembershipStatus)
   @JoinColumn({ name: 'status_id' })
-  status: MembershipStatus;
+  status: Relation<MembershipStatus>;
 }

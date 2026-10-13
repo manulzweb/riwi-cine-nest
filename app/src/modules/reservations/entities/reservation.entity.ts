@@ -9,6 +9,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity.js';
 import { CinemaFunction } from '../../showtimes/entities/cinema-function.entity.js';
@@ -51,12 +52,12 @@ export class Reservation {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Relation<User>;
 
   @ManyToOne(() => CinemaFunction)
   @JoinColumn({ name: 'function_id' })
-  function: CinemaFunction;
+  function: Relation<CinemaFunction>;
 
   @OneToMany(() => ReservationSeat, (seat) => seat.reservation)
-  seats: ReservationSeat[];
+  seats: Relation<ReservationSeat[]>;
 }

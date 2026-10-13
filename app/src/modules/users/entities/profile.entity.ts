@@ -9,6 +9,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { User } from './user.entity.js';
 import { City } from '../../locations/entities/city.entity.js';
@@ -57,13 +58,13 @@ export class Profile {
 
   @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Relation<User>;
 
   @ManyToOne(() => City, { nullable: true })
   @JoinColumn({ name: 'city_id' })
-  city: City;
+  city: Relation<City>;
 
   @ManyToOne(() => Cinema, { nullable: true })
   @JoinColumn({ name: 'favorite_cinema_id' })
-  favoriteCinema: Cinema;
+  favoriteCinema: Relation<Cinema>;
 }

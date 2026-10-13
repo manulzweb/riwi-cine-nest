@@ -8,6 +8,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { Cart } from './cart.entity.js';
 import { Snack } from '../../snacks/entities/snack.entity.js';
@@ -37,9 +38,9 @@ export class CartItem {
 
   @ManyToOne(() => Cart, (cart) => cart.items, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'cart_id' })
-  cart: Cart;
+  cart: Relation<Cart>;
 
   @ManyToOne(() => Snack)
   @JoinColumn({ name: 'snack_id' })
-  snack: Snack;
+  snack: Relation<Snack>;
 }

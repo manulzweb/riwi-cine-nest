@@ -8,6 +8,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { Room } from './room.entity.js';
 import { SeatType } from './seat-type.entity.js';
@@ -43,9 +44,9 @@ export class Seat {
 
   @ManyToOne(() => Room, (room) => room.seats, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'room_id' })
-  room: Room;
+  room: Relation<Room>;
 
   @ManyToOne(() => SeatType, (seatType) => seatType.seats)
   @JoinColumn({ name: 'seat_type_id' })
-  seatType: SeatType;
+  seatType: Relation<SeatType>;
 }

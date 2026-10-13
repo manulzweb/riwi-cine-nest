@@ -9,6 +9,7 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  type Relation,
   UpdateDateColumn,
 } from 'typeorm';
 import { Role } from './role.entity.js';
@@ -72,20 +73,20 @@ export class User {
 
   @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn({ name: 'role_id' })
-  role: Role;
+  role: Relation<Role>;
 
   @OneToOne(() => Profile, (profile) => profile.user)
-  profile: Profile;
+  profile: Relation<Profile>;
 
   @OneToMany(() => RefreshToken, (token) => token.user)
-  refreshTokens: RefreshToken[];
+  refreshTokens: Relation<RefreshToken[]>;
 
   @OneToMany(() => LoginAudit, (audit) => audit.user)
-  loginAudits: LoginAudit[];
+  loginAudits: Relation<LoginAudit[]>;
 
   @OneToMany(() => EmailVerificationToken, (token) => token.user)
-  emailVerificationTokens: EmailVerificationToken[];
+  emailVerificationTokens: Relation<EmailVerificationToken[]>;
 
   @OneToMany(() => PasswordResetToken, (token) => token.user)
-  passwordResetTokens: PasswordResetToken[];
+  passwordResetTokens: Relation<PasswordResetToken[]>;
 }

@@ -8,6 +8,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity.js';
 import { Movie } from '../../movies/entities/movie.entity.js';
@@ -34,9 +35,9 @@ export class UpcomingMovieNotification {
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Relation<User>;
 
   @ManyToOne(() => Movie, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'movie_id' })
-  movie: Movie;
+  movie: Relation<Movie>;
 }

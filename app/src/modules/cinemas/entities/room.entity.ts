@@ -9,6 +9,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { Cinema } from './cinema.entity.js';
 import { Seat } from './seat.entity.js';
@@ -41,8 +42,8 @@ export class Room {
 
   @ManyToOne(() => Cinema, (cinema) => cinema.rooms, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'cinemaId' })
-  cinema: Cinema;
+  cinema: Relation<Cinema>;
 
   @OneToMany(() => Seat, (seat) => seat.room)
-  seats: Seat[];
+  seats: Relation<Seat[]>;
 }

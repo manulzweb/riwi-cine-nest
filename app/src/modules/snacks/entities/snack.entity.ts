@@ -7,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { Promotion } from './promotion.entity.js';
 
@@ -49,5 +50,5 @@ export class Snack {
   updatedAt: Date;
 
   @OneToMany(() => Promotion, (promotion) => promotion.snack)
-  promotions: Promotion[];
+  promotions: Relation<Promotion[]>;
 }
