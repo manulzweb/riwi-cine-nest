@@ -45,7 +45,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
             : undefined);
       }
     } else if (exception instanceof Error) {
-      if ('code' in exception && (exception as { code: unknown }).code === 'EBADCSRFTOKEN') {
+      if (
+        'code' in exception &&
+        (exception as { code: unknown }).code === 'EBADCSRFTOKEN'
+      ) {
         status = HttpStatus.FORBIDDEN;
         code = 'AUTH_CSRF_INVALID';
         message = 'Token CSRF inválido o ausente';
